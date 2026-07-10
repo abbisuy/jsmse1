@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{ theme: dark }}>
+    <ClerkProvider appearance={{ theme: dark }} afterSignOutUrl="/sign-in">
       <html
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}

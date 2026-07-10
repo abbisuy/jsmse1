@@ -35,7 +35,7 @@ export function EditorNavbar({
       <div className="flex items-center gap-2" />
 
       <div className="flex items-center gap-2">
-        <UserButton afterSignOutUrl="/sign-in"/>
+        <UserButton />
       </div>
     </header>
   );
