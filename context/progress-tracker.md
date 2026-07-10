@@ -9,22 +9,23 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-- Implement Clerk authentication following 03-auth.md specification.
+- Implement editor home screen and dialogs following 04-editor-dialogs specification.
 
 ## Completed
 
 - Next.js boilerplate cleanup (globals.css stripped, public SVGs removed, minimal page).
 - 01A-design-system: shadcn/ui setup + dark theme tokens + UI primitive components.
 - 02-editor: editor navbar + floating project sidebar shell + dialog pattern readiness.
+- 03-auth: Clerk authentication (Provider, sign-in/sign-up pages, route protection)
+- 04-editor-dialogs: editor home screen + Create/Rename/Delete project dialogs + sidebar actions (mock data).
 
 ## In Progress
 
-- Implementing Clerk authentication (Provider, sign-in/sign-up pages, route protection).
 
 ## Next Up
 
 - Collaborative canvas (Liveblocks + React Flow).
-- Prisma integration for projects.
+- Prisma integration for projects (replace mock-projects with real data).
 
 ## Open Questions
 
@@ -46,3 +47,16 @@ Update this file whenever the current phase, active feature, or implementation s
 - `globals.css` defines the `ui-context.md` semantic palette as CSS custom properties in `:root` (dark-only, no `.dark` split) and aliases shadcn standard tokens (`--background`, `--primary`, `--border`, etc.) to them via `@theme inline`. App semantic Tailwind utilities (`bg-base`, `bg-surface`, `text-copy-primary`, `border-surface-border`, `text-brand`, `bg-accent-dim`, etc.) are also exposed.
 - `dark` class added to `<html>` so generated `dark:` variants in `components/ui/*` resolve against the dark `:root` tokens without modifying the components.
 - Fonts: `--font-geist-sans` / `--font-geist-mono` (set on `<html>` by `next/font`) mapped to Tailwind `font-sans` / `font-mono` via `@theme inline`.
+- 04-editor-dialogs (mock data only, no API/persistence):
+  - `app/editor/page.tsx`: server component, `auth()` guard redirects to `/sign-in` if unauthenticated, renders `<EditorHome />`.
+  - `components/editor/editor-home.tsx`: client component owning `isSidebarOpen` state and the `useProjectsDialogs` hook. Composes `EditorNavbar` (top), floating `ProjectSidebar`, and a minimal centered home message (`Create a project or open an existing one` + description + `New Project` button with `Plus`). No card wrappers. Renders all three dialogs and wires open/close/submit.
+  - `hooks/use-projects-dialogs.ts`: dedicated hook managing dialog state (`create`/`rename`/`delete`/null), `activeProject`, `isSubmitting` loading state, and `name`/`slug` form state. `setName` derives `slug` live via `slugify`. Submit handlers simulate latency with `setTimeout` (600ms) then close — placeholder for future API wiring.
+  - `lib/slugify.ts`: lowercase, strip non-alphanumeric, collapse whitespace/dashes to single hyphens, trim edges.
+  - `lib/mock-projects.ts`: 4 `Project` records (2 owned, 2 shared) — source for the sidebar lists until Prisma lands.
+  - `types/project.ts`: `Project` interface (`id`, `name`, `slug`, `owner`, `updatedAt`), `ProjectDialogState`.
+  - `components/editor/project-item.tsx`: sidebar project row with name, slug, relative timestamp, and hover-reveal `Pencil`/`Trash2` action buttons. Actions render only when `project.owner && onRename && onDelete` — shared/collaborator projects show no actions.
+  - `components/editor/project-sidebar.tsx` (updated): now accepts `projects`, `onNewProject`, `onRename`, `onDelete`; splits owned/shared; renders scrollable `ProjectItem` lists under the existing "My Projects"/"Shared" tabs. Mobile (`md:hidden`) backdrop scrim with tap-to-close; desktop relies on the navbar toggle.
+  - `components/editor/dialogs/create-project-dialog.tsx`: name input (auto-focused) + live slug preview box; `Enter` submits form; footer Cancel/Create buttons; Create disabled until name+slug non-empty.
+  - `components/editor/dialogs/rename-project-dialog.tsx`: prefilled name input (auto-focused), description shows current project name, `Enter` submits; Save disabled when name empty or unchanged.
+  - `components/editor/dialogs/delete-project-dialog.tsx`: destructive confirmation only (no input), confirm button uses `variant="destructive"`.
+  - Verified with `pnpm lint` and `pnpm build` (no TS/lint errors). `/editor` builds as a dynamic (`ƒ`) server-rendered route.
