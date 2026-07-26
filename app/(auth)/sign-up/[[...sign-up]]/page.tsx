@@ -1,28 +1,35 @@
 import { SignUp } from "@clerk/nextjs";
+import { Check } from "lucide-react";
 
 export default function SignUpPage() {
   return (
     <div className="flex flex-col md:flex-row min-h-screen w-full">
       {/* Left Panel: Branding/Features (Large Screens) */}
-      <div className="hidden md:flex flex-col justify-center w-1/2 bg-surface p-12 border-r border-surface-border">
+      <div className="hidden md:flex flex-col justify-center w-1/2 bg-surface p-12 pl-24 lg:pl-32 border-r border-surface-border">
         <div className="max-w-md space-y-8">
           <div>
-            <h1 className="text-4xl font-bold text-brand tracking-tight">Ghost AI</h1>
-            <p className="mt-4 text-lg text-copy-secondary">
+            <h1 className="text-5xl font-bold text-brand tracking-tight lg:text-6xl">Ghost AI</h1>
+            <p className="mt-4 text-xl leading-relaxed text-copy-secondary">
               The ultimate real-time collaborative system design workspace.
             </p>
           </div>
-          <ul className="space-y-4 text-copy-primary">
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          <ul className="space-y-5 text-lg text-copy-primary">
+            <li className="flex items-center gap-4">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-dim">
+                <Check className="h-4 w-4 text-brand" />
+              </span>
               Real-time collaboration
             </li>
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+            <li className="flex items-center gap-4">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-dim">
+                <Check className="h-4 w-4 text-brand" />
+              </span>
               Intuitive canvas interface
             </li>
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+            <li className="flex items-center gap-4">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-dim">
+                <Check className="h-4 w-4 text-brand" />
+              </span>
               Advanced system modeling
             </li>
           </ul>

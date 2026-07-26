@@ -9,7 +9,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-- Implement editor home screen and dialogs following 04-editor-dialogs specification.
+- Collaborative canvas (Liveblocks + React Flow).
 
 ## Completed
 
@@ -18,6 +18,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - 02-editor: editor navbar + floating project sidebar shell + dialog pattern readiness.
 - 03-auth: Clerk authentication (Provider, sign-in/sign-up pages, route protection)
 - 04-editor-dialogs: editor home screen + Create/Rename/Delete project dialogs + sidebar actions (mock data).
+- 04B-fix-styles: enlarged left-side typography and swapped bullet dots for Lucide `Check` icons in `bg-brand-dim` circles on `/sign-in` and `/sign-up`.
 
 ## In Progress
 
