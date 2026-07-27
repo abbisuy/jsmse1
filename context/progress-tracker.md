@@ -9,7 +9,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-- Collaborative canvas (Liveblocks + React Flow).
+
 
 ## Completed
 
@@ -19,9 +19,11 @@ Update this file whenever the current phase, active feature, or implementation s
 - 03-auth: Clerk authentication (Provider, sign-in/sign-up pages, route protection)
 - 04-editor-dialogs: editor home screen + Create/Rename/Delete project dialogs + sidebar actions (mock data).
 - 04B-fix-styles: enlarged left-side typography and swapped bullet dots for Lucide `Check` icons in `bg-brand-dim` circles on `/sign-in` and `/sign-up`.
+- 05-prisma.md: Prisma data models, Prisma client singleton, and first migration.
 
 ## In Progress
 
+- 05-prisma: project data models, Prisma client singleton, first migration.
 
 ## Next Up
 
@@ -61,3 +63,11 @@ Update this file whenever the current phase, active feature, or implementation s
   - `components/editor/dialogs/rename-project-dialog.tsx`: prefilled name input (auto-focused), description shows current project name, `Enter` submits; Save disabled when name empty or unchanged.
   - `components/editor/dialogs/delete-project-dialog.tsx`: destructive confirmation only (no input), confirm button uses `variant="destructive"`.
   - Verified with `pnpm lint` and `pnpm build` (no TS/lint errors). `/editor` builds as a dynamic (`ƒ`) server-rendered route.
+- 05-prisma:
+  - `prisma/models/project.prisma` defines `Project` (`id`, `ownerId`→`owner_id`, `name`, `description?`, `status` enum default `DRAFT`, `canvasJsonPath?`→`canvas_json_path`, `createdAt`, `updatedAt`) and `ProjectCollaborator` (`id`, `projectId`→`project_id`, `collaboratorEmail`→`collaborator_email`, `createdAt`, FK to `Project` with `onDelete: Cascade`). Indexes: `Project(ownerId)`, `Project(createdAt)`, `ProjectCollaborator(collaboratorEmail)`, `ProjectCollaborator(projectId, createdAt)`, unique `(projectId, collaboratorEmail)`.
+  - `enum ProjectStatus { DRAFT, ARCHIVED }`.
+  - `lib/prisma.ts`: cached singleton on `globalThis` (non-production only). Branches on `DATABASE_URL` — `prisma+postgres://` → `new PrismaClient({ accelerateUrl }).$extends(withAccelerate())`; otherwise `new PrismaClient({ adapter: new PrismaPg({ connectionString }) })`. Accelerate path type-cast `as unknown as PrismaClient` to keep the exported type uniform.
+  - `@prisma/extension-accelerate@3.0.1` installed beyond the spec's listed deps (required by the Accelerate branch).
+  - Prisma v7 `prisma-client` generator `output = "./app/generated/prisma"` is resolved **relative to the schema directory** (`prisma/`), so the generated client lives at `prisma/app/generated/prisma/client.ts`. The import in `lib/prisma.ts` is `@/prisma/app/generated/prisma/client` (NOT `@/app/generated/prisma/client`). `.gitignore` already excludes `/prisma/app/generated/prisma`.
+  - `prisma/schema.prisma` uses `previewFeatures = ["prismaSchemaFolder"]` to enable multi-file schema in `prisma/models/`. The feature is deprecated-but-functional in v7.9.0; safe to leave as-is.
+  - First migration `20260727171017_init` applied to the Postgres datasource in `.env.local` (`pooled.db.prisma.io:5432`). SQL: `prisma/migrations/20260727171017_init/migration.sql`.
