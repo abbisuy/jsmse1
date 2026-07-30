@@ -44,6 +44,7 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (error: unknown) {
+    //console.log(typeof error,"******@@@@@@@@@@@@@@@@@@@@@*****",  error, "******", error as Prisma.PrismaClientKnownRequestError.code );
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       // If the record was not found or ownerId doesn't match, return 404 to prevent enumeration
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
@@ -79,6 +80,7 @@ export async function DELETE(
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
+      console.log(typeof error,"******@@@@@@@@@@@@@@@@@@@@@*****",  error);
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       // If the record was not found or ownerId doesn't match, return 404 to prevent enumeration
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
