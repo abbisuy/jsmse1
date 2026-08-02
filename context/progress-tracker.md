@@ -2,14 +2,9 @@
 
 Update this file whenever the current phase, active feature, or implementation state changes.
 
-## Current Phase
-
-- Foundation: Editor Chrome
-- Auth & Projects (Clerk, Prisma, route protection)
-
 ## Current Goal
 
-
+07A-store-new-project-in-DB - implement functionality of storing of user entered project in the back-end prisma database.
 
 ## Completed
 
@@ -23,7 +18,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## In Progress
 
-- 05-prisma: project data models, Prisma client singleton, first migration.
+
 
 ## Next Up
 

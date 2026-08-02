@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { slugify } from "@/lib/slugify";
 import type { Project, ProjectDialogState } from "@/types/project";
@@ -35,6 +36,8 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
 
   const [name, setNameState] = useState("");
   const [slug, setSlugState] = useState("");
+
+  const router = useRouter();
 
   const close = useCallback(() => {
     setDialog(null);
@@ -77,14 +80,25 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
     setSlugState(slugify(value));
   }, []);
 
-  const submitCreate = useCallback(() => {
+  const submitCreate = useCallback(async () => {
     if (!name.trim() || !slug.trim()) return;
     setIsSubmitting(true);
-    window.setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), slug: slug.trim() }),
+      });
+      if (!response.ok) {
+        throw new Error(`Create project failed: ${response.status}`);
+      }
+      const created = (await response.json()) as { id: string };
       close();
-    }, 600);
-  }, [name, slug, close]);
+      router.push(`/editor/${created.id}`);
+    } catch {
+      setIsSubmitting(false);
+    }
+  }, [name, slug, close, router]);
 
   const submitRename = useCallback(() => {
     if (!name.trim()) return;
