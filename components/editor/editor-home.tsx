@@ -10,9 +10,13 @@ import { RenameProjectDialog } from "@/components/editor/dialogs/rename-project-
 import { DeleteProjectDialog } from "@/components/editor/dialogs/delete-project-dialog";
 import { Button } from "@/components/ui/button";
 import { useProjectsDialogs } from "@/hooks/use-projects-dialogs";
-import { mockProjects } from "@/lib/mock-projects";
+import type { Project } from "@/types/project";
 
-export function EditorHome() {
+interface EditorHomeProps {
+  projects: Project[];
+}
+
+export function EditorHome({ projects }: EditorHomeProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const dialogs = useProjectsDialogs();
@@ -27,7 +31,7 @@ export function EditorHome() {
       <ProjectSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
-        projects={mockProjects}
+        projects={projects}
         onNewProject={() => {
           setIsSidebarOpen(false);
           dialogs.openCreate();

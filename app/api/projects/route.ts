@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { createProject, getProjectsForUser } from "@/db/projects";
 
 export async function GET() {
   const { userId } = await auth();
@@ -8,11 +8,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const projects = await prisma.project.findMany({
-    where: { ownerId: userId },
-    orderBy: { createdAt: "desc" },
-  });
-
+  const projects = await getProjectsForUser(userId);
   return NextResponse.json(projects);
 }
 
@@ -26,9 +22,6 @@ export async function POST(req: Request) {
   const name =
     typeof body.name === "string" && body.name.trim() ? body.name.trim() : "Untitled Project";
 
-  const project = await prisma.project.create({
-    data: { ownerId: userId, name },
-  });
-
+  const project = await createProject(userId, name);
   return NextResponse.json(project, { status: 201 });
 }

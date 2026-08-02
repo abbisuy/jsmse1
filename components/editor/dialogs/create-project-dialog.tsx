@@ -63,6 +63,7 @@ export function CreateProjectDialog({
               placeholder="My architecture"
               value={name}
               onChange={(event) => onNameChange(event.target.value)}
+              className="text-foreground" 
             />
           </div>
 

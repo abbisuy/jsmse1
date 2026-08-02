@@ -1,22 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET, POST } from "../../../app/api/projects/route";
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { createProject, getProjectsForUser } from "@/db/projects";
 
 // Mock Clerk auth
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(),
 }));
 
-// Mock Prisma
-vi.mock("@/lib/prisma", () => ({
-  prisma: {
-    project: {
-      findMany: vi.fn(),
-      create: vi.fn(),
-    },
-  },
+// Mock db/projects data-access layer
+vi.mock("@/db/projects", () => ({
+  getProjectsForUser: vi.fn(),
+  createProject: vi.fn(),
 }));
 
 describe("Projects API Route", () => {
@@ -37,23 +32,20 @@ describe("Projects API Route", () => {
 
     it("should return a list of projects for the authenticated user", async () => {
       const mockUserId = "user_123";
-      const mockProjects = [
-        { id: "p1", name: "Project One", ownerId: mockUserId },
-        { id: "p2", name: "Project Two", ownerId: mockUserId },
+      const mappedProjects = [
+        { id: "p1", name: "Project One", slug: "project-one", owner: true, updatedAt: "2026-08-01T00:00:00.000Z" },
+        { id: "p2", name: "Project Two", slug: "project-two", owner: true, updatedAt: "2026-08-01T00:00:00.000Z" },
       ];
 
       (auth as any).mockResolvedValue({ userId: mockUserId });
-      (prisma.project.findMany as any).mockResolvedValue(mockProjects);
+      (getProjectsForUser as any).mockResolvedValue(mappedProjects);
 
       const response = await GET(new Request("http://localhost/api/projects"));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(mockProjects);
-      expect(prisma.project.findMany).toHaveBeenCalledWith({
-        where: { ownerId: mockUserId },
-        orderBy: { createdAt: "desc" },
-      });
+      expect(data).toEqual(mappedProjects);
+      expect(getProjectsForUser).toHaveBeenCalledWith(mockUserId);
     });
   });
 
@@ -76,10 +68,10 @@ describe("Projects API Route", () => {
     it("should create a project with the provided name", async () => {
       const mockUserId = "user_123";
       const projectName = "My Awesome Project";
-      const mockCreatedProject = { id: "p3", name: projectName, ownerId: mockUserId };
+      const mockCreatedProject = { id: "p3", name: projectName };
 
       (auth as any).mockResolvedValue({ userId: mockUserId });
-      (prisma.project.create as any).mockResolvedValue(mockCreatedProject);
+      (createProject as any).mockResolvedValue(mockCreatedProject);
 
       const req = new Request("http://localhost/api/projects", {
         method: "POST",
@@ -91,16 +83,14 @@ describe("Projects API Route", () => {
 
       expect(response.status).toBe(201);
       expect(data).toEqual(mockCreatedProject);
-      expect(prisma.project.create).toHaveBeenCalledWith({
-        data: { ownerId: mockUserId, name: projectName },
-      });
+      expect(createProject).toHaveBeenCalledWith(mockUserId, projectName);
     });
 
-    it("should use 'Untitled Project' as fallback for empty or missing names", async () => {
+it("should use 'Untitled Project' as fallback for empty or missing names", async () => {
       const mockUserId = "user_123";
       (auth as any).mockResolvedValue({ userId: mockUserId });
-      (prisma.project.create as any).mockImplementation(({ data }) =>
-        Promise.resolve({ id: "p4", ...data })
+      (createProject as any).mockImplementation(() =>
+        Promise.resolve({ id: "p4", name: "Untitled Project" })
       );
 
       const testCases = [
