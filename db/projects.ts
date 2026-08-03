@@ -24,6 +24,31 @@ export async function createProject(userId: string, name: string): Promise<{ id:
   return { id: project.id, name: project.name };
 }
 
+export async function updateProject(
+  projectId: string,
+  userId: string,
+  name: string
+): Promise<{ id: string; name: string }> {
+  const project = await prisma.project.update({
+    where: { id: projectId, ownerId: userId },
+    data: { name },
+  });
+  return { id: project.id, name: project.name };
+}
+
+export async function deleteProject(
+  projectId: string,
+  userId: string
+): Promise<boolean> {
+  const result = await prisma.project.deleteMany({
+    where: {
+      id: projectId,
+      ownerId: userId,
+    },
+  });
+  return result.count > 0;
+}
+
 export async function getProjectsForUser(userId: string): Promise<Project[]> {
   const rows = await prisma.project.findMany({
     where: { ownerId: userId },
