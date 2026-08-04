@@ -82,15 +82,15 @@
 :root {
     /* App semantic palette (ui-context.md). */
     --bg-base: #080809;
-    --bg-surface: #111114;
+    --bg-surface: #066bf8;
     --bg-elevated: #18181c;
     --bg-subtle: #1e1e23;
-    --border-default: #f9f8fa;
-    --border-subtle: #3a3a42;
+    --border-default: #2439d4;
+    --border-subtle: #8b8ba8;
     --text-primary: #f0f0f4;
     --text-secondary: #c0c0cc;
-    --text-muted: #808090;
-    --text-faint: #505060;
+    --text-muted: #adadca;
+    --text-faint: #e3e3ee;
     --accent-primary: #36b561;
     --accent-primary-dim: rgba(0, 200, 212, 0.12);
     --accent-ai: #6457f9;

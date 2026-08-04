@@ -57,7 +57,7 @@ export function EditorWorkspace({
             <h1 className="text-xl font-semibold text-copy-secondary">
               Canvas coming soon
             </h1>
-            <p className="max-w-md text-sm text-copy-muted">
+            <p className="max-w-md text-sm text-copy-secondary">
               The collaborative canvas will live here. For now, this is a
               placeholder while {currentProject.name} is open.
             </p>
@@ -75,7 +75,7 @@ export function EditorWorkspace({
             </span>
           </div>
           <div className="flex flex-1 items-center justify-center px-6 text-center">
-            <p className="text-sm text-copy-muted">AI chat coming soon</p>
+            <p className="text-sm text-copy-secondary">AI chat coming soon</p>
           </div>
         </aside>
       </div>

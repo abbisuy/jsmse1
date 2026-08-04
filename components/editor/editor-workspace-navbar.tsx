@@ -32,7 +32,7 @@ export function EditorWorkspaceNavbar({
         >
           {isSidebarOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
         </Button>
-        <span className="truncate text-sm font-medium text-copy-primary">
+        <span className="truncate text-lg font-medium text-copy-primary">
           {projectName}
         </span>
       </div>
