@@ -16,6 +16,7 @@ interface ProjectSidebarProps {
   onNewProject: () => void;
   onRename: (project: Project) => void;
   onDelete: (project: Project) => void;
+  className?: string;
 }
 
 function EmptyPlaceholder({ label }: { label: string }) {
@@ -34,6 +35,7 @@ export function ProjectSidebar({
   onNewProject,
   onRename,
   onDelete,
+  className = "",
 }: ProjectSidebarProps) {
   const owned = projects.filter((p) => p.owner);
   const shared = projects.filter((p) => !p.owner);
@@ -48,9 +50,12 @@ export function ProjectSidebar({
         onClick={onClose}
       />
       <aside
-        className={`fixed top-0 left-0 z-40 flex h-full w-72 flex-col border-r border-surface-border bg-surface transition-transform duration-200 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`flex flex-col rounded-xl border border-surface-border bg-surface shadow-sm transition-all duration-200
+          fixed top-0 left-0 z-40 h-full
+          md:static md:z-auto md:h-auto
+          ${isOpen ? "w-72" : "hidden md:w-0 md:overflow-hidden"}
+          ${className}
+        `}
         aria-hidden={!isOpen}
       >
         <div className="flex h-14 shrink-0 items-center justify-between border-b border-surface-border px-4">
