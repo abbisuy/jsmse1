@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getUserEmail } from "@/lib/project-access";
 import { slugify } from "@/lib/slugify";
 import type { Project } from "@/types/project";
 
@@ -50,10 +51,32 @@ export async function deleteProject(
 }
 
 export async function getProjectsForUser(userId: string): Promise<Project[]> {
-  const rows = await prisma.project.findMany({
+  const owned = await prisma.project.findMany({
     where: { ownerId: userId },
     orderBy: { createdAt: "desc" },
     select: { id: true, name: true, updatedAt: true },
   });
-  return rows.map((row) => toProject(row));
+
+  const ownedProjects = owned.map((row) => toProject(row));
+
+  const primary = await getUserEmail(userId);
+  if (!primary) return ownedProjects;
+
+  const collaborations = await prisma.projectCollaborator.findMany({
+    where: { collaboratorEmail: primary },
+    orderBy: { createdAt: "desc" },
+    select: {
+      project: { select: { id: true, name: true, updatedAt: true } },
+    },
+  });
+
+  const sharedProjects: Project[] = collaborations.map(({ project }) => ({
+    id: project.id,
+    name: project.name,
+    slug: slugify(project.name),
+    owner: false,
+    updatedAt: project.updatedAt.toISOString(),
+  }));
+
+  return [...ownedProjects, ...sharedProjects];
 }

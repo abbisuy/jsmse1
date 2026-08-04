@@ -4,7 +4,10 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-07A-store-new-project-in-DB - implement functionality of storing of user entered project in the back-end prisma database.
+
+## In Progress
+
+- 08-editor-workspace-shell: Build `/editor/[projectId]` workspace shell with server-side access checks (no canvas logic yet).
 
 ## Completed
 
@@ -15,10 +18,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - 04-editor-dialogs: editor home screen + Create/Rename/Delete project dialogs + sidebar actions (mock data).
 - 04B-fix-styles: enlarged left-side typography and swapped bullet dots for Lucide `Check` icons in `bg-brand-dim` circles on `/sign-in` and `/sign-up`.
 - 05-prisma.md: Prisma data models, Prisma client singleton, and first migration.
-
-## In Progress
-
-
+- 07C-update-delete-project-in-DB - Wire Rename/Delete project dialog submit handlers to PATCH/DELETE /api/projects/[projectId], refresh sidebar via router.refresh() on success, and surface server errors in red near the top of each dialog on failure.
 
 ## Next Up
 

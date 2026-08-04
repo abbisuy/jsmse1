@@ -1,12 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { Project } from "@/types/project";
 
 interface ProjectItemProps {
   project: Project;
+  currentProjectId?: string;
   onRename?: (project: Project) => void;
   onDelete?: (project: Project) => void;
 }
@@ -25,15 +28,36 @@ function formatRelative(iso: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export function ProjectItem({ project, onRename, onDelete }: ProjectItemProps) {
+export function ProjectItem({
+  project,
+  currentProjectId,
+  onRename,
+  onDelete,
+}: ProjectItemProps) {
+  const isActive = currentProjectId === project.id;
   return (
-    <div className="group/item flex items-center gap-1 rounded-lg px-2 py-2 transition-colors hover:bg-accent">
-      <div className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate text-sm text-copy-primary">{project.name}</span>
+    <div
+      className={cn(
+        "group/item flex items-center gap-1 rounded-lg px-2 py-2 transition-colors hover:bg-accent",
+        isActive && "bg-accent"
+      )}
+    >
+      <Link
+        href={`/editor/${project.id}`}
+        className="flex min-w-0 flex-1 flex-col text-left"
+      >
+        <span
+          className={cn(
+            "truncate text-sm text-copy-primary",
+            isActive && "text-brand font-medium"
+          )}
+        >
+          {project.name}
+        </span>
         <span className="truncate text-xs text-copy-faint">
           {project.slug} · {formatRelative(project.updatedAt)}
         </span>
-      </div>
+      </Link>
 
       {project.owner && onRename && onDelete && (
         <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover/item:opacity-100 focus-within:opacity-100">

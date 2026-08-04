@@ -12,6 +12,7 @@ export interface UseProjectsDialogsResult {
   dialog: ProjectDialogState["open"];
   activeProject: Project | null;
   isSubmitting: boolean;
+  error: string | null;
 
   name: string;
   slug: string;
@@ -33,6 +34,7 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
   const [dialog, setDialog] = useState<OpenDialog>(null);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [name, setNameState] = useState("");
   const [slug, setSlugState] = useState("");
@@ -45,6 +47,7 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
     setNameState("");
     setSlugState("");
     setIsSubmitting(false);
+    setError(null);
   }, []);
 
   const openCreate = useCallback(() => {
@@ -53,6 +56,7 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
     setNameState("");
     setSlugState("");
     setIsSubmitting(false);
+    setError(null);
   }, []);
 
   const openRename = useCallback((project: Project) => {
@@ -61,6 +65,7 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
     setNameState(project.name);
     setSlugState(project.slug);
     setIsSubmitting(false);
+    setError(null);
   }, []);
 
   const openDelete = useCallback((project: Project) => {
@@ -69,6 +74,7 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
     setNameState("");
     setSlugState("");
     setIsSubmitting(false);
+    setError(null);
   }, []);
 
   const setName = useCallback((value: string) => {
@@ -94,34 +100,59 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
       }
       const created = (await response.json()) as { id: string };
       close();
+      //router.refresh();
       router.push(`/editor/${created.id}`);
     } catch {
       setIsSubmitting(false);
     }
   }, [name, slug, close, router]);
 
-  const submitRename = useCallback(() => {
-    if (!name.trim()) return;
+  const submitRename = useCallback(async () => {
+    if (!activeProject || !name.trim()) return;
     setIsSubmitting(true);
-    window.setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch(`/api/projects/${activeProject.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim() }),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error ?? `Rename failed (${response.status})`);
+      }
       close();
-    }, 600);
-  }, [name, close]);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Rename failed");
+      setIsSubmitting(false);
+    }
+  }, [activeProject, name, close, router]);
 
-  const submitDelete = useCallback(() => {
+  const submitDelete = useCallback(async () => {
+    if (!activeProject) return;
     setIsSubmitting(true);
-    window.setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch(`/api/projects/${activeProject.id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok && response.status !== 204) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error ?? `Delete failed (${response.status})`);
+      }
       close();
-    }, 600);
-  }, [close]);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Delete failed");
+      setIsSubmitting(false);
+    }
+  }, [activeProject, close, router]);
 
   return useMemo(
     () => ({
       dialog,
       activeProject,
       isSubmitting,
+      error,
       name,
       slug,
       openCreate,
@@ -138,6 +169,7 @@ export function useProjectsDialogs(): UseProjectsDialogsResult {
       dialog,
       activeProject,
       isSubmitting,
+      error,
       name,
       slug,
       openCreate,

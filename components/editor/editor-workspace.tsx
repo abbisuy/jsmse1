@@ -1,68 +1,84 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
 
-import { EditorNavbar } from "@/components/editor/editor-navbar";
+import { EditorWorkspaceNavbar } from "@/components/editor/editor-workspace-navbar";
 import { ProjectSidebar } from "@/components/editor/project-sidebar";
 import { CreateProjectDialog } from "@/components/editor/dialogs/create-project-dialog";
 import { RenameProjectDialog } from "@/components/editor/dialogs/rename-project-dialog";
 import { DeleteProjectDialog } from "@/components/editor/dialogs/delete-project-dialog";
-import { Button } from "@/components/ui/button";
 import { useProjectsDialogs } from "@/hooks/use-projects-dialogs";
 import type { Project } from "@/types/project";
 
-interface EditorHomeProps {
+interface EditorWorkspaceProps {
   projects: Project[];
+  currentProject: { id: string; name: string };
 }
 
-export function EditorHome({ projects }: EditorHomeProps) {
+export function EditorWorkspace({
+  projects,
+  currentProject,
+}: EditorWorkspaceProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(false);
 
   const dialogs = useProjectsDialogs();
 
   return (
     <div className="flex h-screen flex-col bg-base">
-      <EditorNavbar
+      <EditorWorkspaceNavbar
+        projectName={currentProject.name}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen((v) => !v)}
+        isAiSidebarOpen={isAiSidebarOpen}
+        onToggleAiSidebar={() => setIsAiSidebarOpen((v) => !v)}
       />
 
       <ProjectSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         projects={projects}
+        currentProjectId={currentProject.id}
         onNewProject={() => {
-          //setIsSidebarOpen(false);
           dialogs.openCreate();
         }}
         onRename={(project) => {
-          //setIsSidebarOpen(false);
           dialogs.openRename(project);
         }}
         onDelete={(project) => {
-          //setIsSidebarOpen(false);
           dialogs.openDelete(project);
         }}
       />
 
-      <main className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <h1 className="max-w-2xl text-2xl font-semibold text-copy-primary sm:text-3xl">
-          Create a project or open an existing one
-        </h1>
-        <p className="mt-3 max-w-md text-sm text-copy-secondary">
-          Start a new architecture workspace, or choose a project from the
-          sidebar.
-        </p>
-        <Button
-          size="lg"
-          className="mt-6"
-          onClick={dialogs.openCreate}
+      <div className="flex flex-1 overflow-hidden">
+        <main className="flex flex-1 items-center justify-center bg-base px-6 text-center">
+          <div className="space-y-2">
+            <h1 className="text-xl font-semibold text-copy-secondary">
+              Canvas coming soon
+            </h1>
+            <p className="max-w-md text-sm text-copy-muted">
+              The collaborative canvas will live here. For now, this is a
+              placeholder while {currentProject.name} is open.
+            </p>
+          </div>
+        </main>
+
+        <aside
+          className={`hidden shrink-0 flex-col border-l border-surface-border bg-surface transition-all duration-200 md:flex ${
+            isAiSidebarOpen ? "w-80 overflow-hidden" : "w-0 overflow-hidden"
+          }`}
+          aria-hidden={!isAiSidebarOpen}
         >
-          <Plus />
-          New Project
-        </Button>
-      </main>
+          <div className="flex h-14 shrink-0 items-center border-b border-surface-border px-4">
+            <span className="text-sm font-medium text-copy-primary">
+              AI Assistant
+            </span>
+          </div>
+          <div className="flex flex-1 items-center justify-center px-6 text-center">
+            <p className="text-sm text-copy-muted">AI chat coming soon</p>
+          </div>
+        </aside>
+      </div>
 
       <CreateProjectDialog
         open={dialogs.dialog === "create"}

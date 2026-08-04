@@ -17,6 +17,7 @@ interface RenameProjectDialogProps {
   currentName: string;
   name: string;
   isSubmitting: boolean;
+  error: string | null;
   onNameChange: (name: string) => void;
   onRename: () => void;
 }
@@ -27,6 +28,7 @@ export function RenameProjectDialog({
   currentName,
   name,
   isSubmitting,
+  error,
   onNameChange,
   onRename,
 }: RenameProjectDialogProps) {
@@ -41,6 +43,15 @@ export function RenameProjectDialog({
             Renaming <span className="text-copy-primary">{currentName}</span>.
           </DialogDescription>
         </DialogHeader>
+
+        {error && (
+          <p
+            role="alert"
+            className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          >
+            {error}
+          </p>
+        )}
 
         <form
           className="flex flex-col gap-3"

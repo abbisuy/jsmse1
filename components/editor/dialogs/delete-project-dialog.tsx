@@ -15,6 +15,7 @@ interface DeleteProjectDialogProps {
   onOpenChange: (open: boolean) => void;
   projectName: string;
   isSubmitting: boolean;
+  error: string | null;
   onDelete: () => void;
 }
 
@@ -23,6 +24,7 @@ export function DeleteProjectDialog({
   onOpenChange,
   projectName,
   isSubmitting,
+  error,
   onDelete,
 }: DeleteProjectDialogProps) {
   return (
@@ -36,6 +38,15 @@ export function DeleteProjectDialog({
             cannot be undone.
           </DialogDescription>
         </DialogHeader>
+
+        {error && (
+          <p
+            role="alert"
+            className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          >
+            {error}
+          </p>
+        )}
 
         <DialogFooter>
           <Button
