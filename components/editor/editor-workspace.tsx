@@ -7,20 +7,24 @@ import { ProjectSidebar } from "@/components/editor/project-sidebar";
 import { CreateProjectDialog } from "@/components/editor/dialogs/create-project-dialog";
 import { RenameProjectDialog } from "@/components/editor/dialogs/rename-project-dialog";
 import { DeleteProjectDialog } from "@/components/editor/dialogs/delete-project-dialog";
+import { ShareDialog } from "@/components/editor/dialogs/share-dialog";
 import { useProjectsDialogs } from "@/hooks/use-projects-dialogs";
 import type { Project } from "@/types/project";
 
 interface EditorWorkspaceProps {
   projects: Project[];
   currentProject: { id: string; name: string };
+  isOwner: boolean;
 }
 
 export function EditorWorkspace({
   projects,
   currentProject,
+  isOwner,
 }: EditorWorkspaceProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
 
   const dialogs = useProjectsDialogs();
 
@@ -32,6 +36,8 @@ export function EditorWorkspace({
         onToggleSidebar={() => setIsSidebarOpen((v) => !v)}
         isAiSidebarOpen={isAiSidebarOpen}
         onToggleAiSidebar={() => setIsAiSidebarOpen((v) => !v)}
+        isOwner={isOwner}
+        onShareClick={() => setShowShareDialog(true)}
       />
 
       <div className="flex flex-1 gap-3 overflow-hidden bg-base/80 p-3">
@@ -114,6 +120,13 @@ export function EditorWorkspace({
         isSubmitting={dialogs.isSubmitting}
         error={dialogs.error}
         onDelete={dialogs.submitDelete}
+      />
+
+      <ShareDialog
+        open={showShareDialog}
+        onOpenChange={setShowShareDialog}
+        projectId={currentProject.id}
+        isOwner={isOwner}
       />
     </div>
   );

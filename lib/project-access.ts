@@ -29,7 +29,7 @@ export async function getUserEmail(userId: string): Promise<string | null> {
 }
 
 export type ProjectAccessResult =
-  | { ok: true; project: { id: string; name: string } }
+  | { ok: true; project: { id: string; name: string }; role: "owner" | "collaborator" }
   | { ok: false; reason: "not-found" | "forbidden" };
 
 interface CheckAccessDeps {
@@ -53,7 +53,7 @@ export async function checkProjectAccess(
   if (!project) return { ok: false, reason: "not-found" };
 
   if (project.ownerId === userId) {
-    return { ok: true, project: { id: project.id, name: project.name } };
+    return { ok: true, project: { id: project.id, name: project.name }, role: "owner" };
   }
 
   const email = deps?.email ?? (await getUserEmail(userId));
@@ -71,5 +71,5 @@ export async function checkProjectAccess(
 
   if (!collaborator) return { ok: false, reason: "forbidden" };
 
-  return { ok: true, project: { id: project.id, name: project.name } };
+  return { ok: true, project: { id: project.id, name: project.name }, role: "collaborator" };
 }

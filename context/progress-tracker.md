@@ -4,10 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
+Plan and implement 09-share-dialog.md  
 
 ## In Progress
 
-- 08-editor-workspace-shell: Build `/editor/[projectId]` workspace shell with server-side access checks (no canvas logic yet).
+
 
 ## Completed
 
@@ -19,6 +20,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - 04B-fix-styles: enlarged left-side typography and swapped bullet dots for Lucide `Check` icons in `bg-brand-dim` circles on `/sign-in` and `/sign-up`.
 - 05-prisma.md: Prisma data models, Prisma client singleton, and first migration.
 - 07C-update-delete-project-in-DB - Wire Rename/Delete project dialog submit handlers to PATCH/DELETE /api/projects/[projectId], refresh sidebar via router.refresh() on success, and surface server errors in red near the top of each dialog on failure.
+- 08-editor-workspace-shell.md
+- 09-share-dialog.md — Share dialog with invite/collaborator list/link copy; Clerk enrichment; owner enforcement server-side
 
 ## Next Up
 

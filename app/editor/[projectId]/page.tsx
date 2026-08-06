@@ -33,6 +33,7 @@ export default async function EditorProjectPage({
     <EditorWorkspace
       projects={projects}
       currentProject={access.project}
+      isOwner={access.role === "owner"}
     />
   );
 }

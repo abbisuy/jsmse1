@@ -11,6 +11,8 @@ interface EditorWorkspaceNavbarProps {
   onToggleSidebar: () => void;
   isAiSidebarOpen: boolean;
   onToggleAiSidebar: () => void;
+  isOwner: boolean;
+  onShareClick: () => void;
 }
 
 export function EditorWorkspaceNavbar({
@@ -19,6 +21,8 @@ export function EditorWorkspaceNavbar({
   onToggleSidebar,
   isAiSidebarOpen,
   onToggleAiSidebar,
+  isOwner,
+  onShareClick,
 }: EditorWorkspaceNavbarProps) {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-surface-border bg-surface px-3">
@@ -38,7 +42,7 @@ export function EditorWorkspaceNavbar({
       </div>
 
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" disabled>
+        <Button variant="outline" size="sm" onClick={onShareClick}>
           <Share2 />
           Share
         </Button>
