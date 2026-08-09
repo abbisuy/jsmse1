@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-Plan and implement 09-share-dialog.md  
+Plan and implement 10-liveblocks-setup.md  
 
 ## In Progress
 
@@ -22,6 +22,7 @@ Plan and implement 09-share-dialog.md
 - 07C-update-delete-project-in-DB - Wire Rename/Delete project dialog submit handlers to PATCH/DELETE /api/projects/[projectId], refresh sidebar via router.refresh() on success, and surface server errors in red near the top of each dialog on failure.
 - 08-editor-workspace-shell.md
 - 09-share-dialog.md — Share dialog with invite/collaborator list/link copy; Clerk enrichment; owner enforcement server-side
+- 10-liveblocks-setup.md — Liveblocks realtime foundation: `liveblocks.config.ts` Presence/UserMeta types, cached `Liveblocks` server client + `getUserColor` palette helper in `lib/liveblocks.ts`, Clerk-gated `POST /api/liveblocks-auth` that uses `checkProjectAccess` for 403, calls `getOrCreateRoom(projectId)` with `defaultAccesses: ["room:write"]`, and issues ID tokens via `identifyUser` with name/avatar/color userInfo.
 
 ## Next Up
 
@@ -69,3 +70,10 @@ Plan and implement 09-share-dialog.md
   - Prisma v7 `prisma-client` generator `output = "./app/generated/prisma"` is resolved **relative to the schema directory** (`prisma/`), so the generated client lives at `prisma/app/generated/prisma/client.ts`. The import in `lib/prisma.ts` is `@/prisma/app/generated/prisma/client` (NOT `@/app/generated/prisma/client`). `.gitignore` already excludes `/prisma/app/generated/prisma`.
   - `prisma/schema.prisma` uses `previewFeatures = ["prismaSchemaFolder"]` to enable multi-file schema in `prisma/models/`. The feature is deprecated-but-functional in v7.9.0; safe to leave as-is.
   - First migration `20260727171017_init` applied to the Postgres datasource in `.env.local` (`pooled.db.prisma.io:5432`). SQL: `prisma/migrations/20260727171017_init/migration.sql`.
+- 10-liveblocks-setup:
+  - Installed `@liveblocks/node@3.23.1` — the spec said "all required packages are already installed" but the server SDK was missing (only client/react/react-flow/react-ui were present). The `Liveblocks` class lives here.
+  - `liveblocks.config.ts`: replaced starter template. `Presence` = `{ cursor: { x, y } | null, isThinking: boolean }`. `UserMeta` = `{ id, info: { name, avatar, color } }`. `Storage` / `RoomEvent` / `ThreadMetadata` / `RoomInfo` left as empty placeholders for future specs.
+  - `lib/liveblocks.ts`: lazy-initialized `Liveblocks` singleton via `Proxy` so `next build` succeeds even without `LIVEBLOCKS_SECRET_KEY` (the SDK validates the secret shape on construction; an eager singleton blew up page-data collection). The real client materializes on first call from the auth route. `getUserColor(userId)` is a 12-color fixed-palette hash (visible on dark theme); deterministic so the same userId always maps to the same color.
+  - `app/api/liveblocks-auth/route.ts`: POST handler. `auth()` → 401; missing `room` in body → 400; `checkProjectAccess` → 403 (forbidden) / 404 (not-found); Clerk enrichment (firstName+lastName ?? firstName ?? username ?? email, imageUrl); `getOrCreateRoom(room, { defaultAccesses: ["room:write"] })` with errors logged but non-fatal; `identifyUser({ userId, groupIds: [] }, { userInfo: { name, avatar, color } })` returns the token via `new Response(body, { status })`.
+  - `Identity` type requires `groupIds` even when empty — passed `[]` to satisfy it without semantics.
+  - `.env.local` does not yet contain `LIVEBLOCKS_SECRET_KEY`; runtime requests will throw a clear error until the developer adds it from https://liveblocks.io/dashboard/apikeys.
