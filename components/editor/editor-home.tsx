@@ -28,7 +28,7 @@ export function EditorHome({ projects }: EditorHomeProps) {
         onToggleSidebar={() => setIsSidebarOpen((v) => !v)}
       />
 
-    <div className="flex flex-1 gap-3 overflow-hidden bg-base/80 p-3">
+    <div className="flex flex-1 gap-1 overflow-hidden bg-base/80 p-1">
       <ProjectSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
