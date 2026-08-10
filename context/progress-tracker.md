@@ -30,8 +30,6 @@ So I will update it to: "Prisma integration for projects (replace mock-projects 
 
 ## Next Up
 
-- Prisma integration for projects (replace mock-projects with real data).
-- Collaborative canvas is now complete!
 
 ## Open Questions
 
