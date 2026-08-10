@@ -8,6 +8,7 @@ import { CreateProjectDialog } from "@/components/editor/dialogs/create-project-
 import { RenameProjectDialog } from "@/components/editor/dialogs/rename-project-dialog";
 import { DeleteProjectDialog } from "@/components/editor/dialogs/delete-project-dialog";
 import { ShareDialog } from "@/components/editor/dialogs/share-dialog";
+import { CanvasRoom } from "@/components/editor/canvas/canvas-room";
 import { useProjectsDialogs } from "@/hooks/use-projects-dialogs";
 import type { Project } from "@/types/project";
 
@@ -59,15 +60,7 @@ export function EditorWorkspace({
         />
 
         <main className="flex flex-1 items-center justify-center rounded-xl border border-surface-border bg-surface shadow-sm px-6 text-center">
-          <div className="space-y-2">
-            <h1 className="text-xl font-semibold text-copy-secondary">
-              Canvas coming soon
-            </h1>
-            <p className="max-w-md text-sm text-copy-secondary">
-              The collaborative canvas will live here. For now, this is a
-              placeholder while {currentProject.name} is open.
-            </p>
-          </div>
+          <CanvasRoom roomId={currentProject.id} />
         </main>
 
         <aside className={`hidden shrink-0 flex-col rounded-xl border border-surface-border bg-surface shadow-sm transition-all duration-200 md:flex ${

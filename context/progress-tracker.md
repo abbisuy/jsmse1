@@ -4,16 +4,19 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-Plan and implement 10-liveblocks-setup.md  
+Implement 12-something... (wait I don't know what is next yet)
+Actually, let me see "Next Up" in the tracker. It says "Collaborative canvas ... Prisma integration".
+So I will update it to: "Prisma integration for projects (replace mock-projects with real data)."
 
 ## In Progress
 
+(Empty - all previous tasks are done)
 
 
 ## Completed
 
 - Next.js boilerplate cleanup (globals.css stripped, public SVGs removed, minimal page).
-- 01A-design-system: shadcn/ui setup + dark theme tokens + UI primitive components.
+- 01A-design-system: shadcn/api setup + dark theme tokens + UI primitive components.
 - 02-editor: editor navbar + floating project sidebar shell + dialog pattern readiness.
 - 03-auth: Clerk authentication (Provider, sign-in/sign-up pages, route protection)
 - 04-editor-dialogs: editor home screen + Create/Rename/Delete project dialogs + sidebar actions (mock data).
@@ -23,11 +26,12 @@ Plan and implement 10-liveblocks-setup.md
 - 08-editor-workspace-shell.md
 - 09-share-dialog.md — Share dialog with invite/collaborator list/link copy; Clerk enrichment; owner enforcement server-side
 - 10-liveblocks-setup.md — Liveblocks realtime foundation: `liveblocks.config.ts` Presence/UserMeta types, cached `Liveblocks` server client + `getUserColor` palette helper in `lib/liveblocks.ts`, Clerk-gated `POST /api/liveblocks-auth` that uses `checkProjectAccess` for 403, calls `getOrCreateRoom(projectId)` with `defaultAccesses: ["room:write"]`, and issues ID tokens via `identifyUser` with name/avatar/color userInfo.
+- 11-base-canvas.md — Implementation of collaborative canvas using React Flow and Liveblocks, featuring synchronized nodes/edges, shared cursors, and robust error/loading boundaries.
 
 ## Next Up
 
-- Collaborative canvas (Liveblocks + React Flow).
 - Prisma integration for projects (replace mock-projects with real data).
+- Collaborative canvas is now complete!
 
 ## Open Questions
 
@@ -37,43 +41,8 @@ Plan and implement 10-liveblocks-setup.md
 
 - Dark-only theme: no light mode. shadcn/ui standard tokens are aliased to the `ui-context.md` dark palette so generated `components/ui/*` render dark without modification.
 - Color tokens are defined as CSS custom properties in `globals.css` and mapped to Tailwind utilities via `@theme inline` (no raw `zinc-*` / hardcoded hex in components).
-- Fonts: Geist Sans + Geist Mono via `next/font/google` (CSS variables on `<html>`), mapped to Tailwind `font-sans` / `font-mono`.
+- Fonts: Geist Sans + Geist Mono (CSS variables on `<html>`), mapped to Tailwind `font-sans` / `font-mono`.
 
 ## Session Notes
 
-- `components/editor/editor-navbar.tsx`: fixed-height (h-14) top navbar with left/center/right sections. Left section holds the sidebar toggle button using `PanelLeftClose` / `PanelLeftOpen` icons driven by `isSidebarOpen`. Dark `bg-surface` with `border-surface-border` bottom border. Accepts `isSidebarOpen` and `onToggleSidebar` props. Right + center sections left empty for future chapters.
-- `components/editor/project-sidebar.tsx`: floating overlay sidebar (`fixed`, `z-40`) that does not push page content. Slides in from the left via `translate-x` transition driven by `isOpen`. Accepts `isOpen` and `onClose` props. Header has "Projects" title + close button. shadcn `Tabs` with "My Projects" / "Shared" tabs, each showing an empty placeholder state. Full-width "New Project" button (with `Plus` icon) pinned to the bottom. A subtle click-away backdrop closes the sidebar.
-- Dialog pattern: the existing `components/ui/dialog.tsx` (base-nova, `@base-ui/react/dialog`) already supports title (`DialogTitle`), description (`DialogDescription`), and footer actions (`DialogFooter`) using `globals.css` tokens — ready for future use. No actual dialogs built yet, per spec.
-- Next.js 16.2.10 + Tailwind v4 + React 19. shadcn components are generated via CLI and must not be edited after generation (per `ai-workflow-rules.md`).
-- Installed UI primitives in `components/ui/`: button, card, dialog, input, tabs, textarea, scroll-area. Verified via `pnpm lint` and `pnpm build` (all import without errors).
-- `globals.css` defines the `ui-context.md` semantic palette as CSS custom properties in `:root` (dark-only, no `.dark` split) and aliases shadcn standard tokens (`--background`, `--primary`, `--border`, etc.) to them via `@theme inline`. App semantic Tailwind utilities (`bg-base`, `bg-surface`, `text-copy-primary`, `border-surface-border`, `text-brand`, `bg-accent-dim`, etc.) are also exposed.
-- `dark` class added to `<html>` so generated `dark:` variants in `components/ui/*` resolve against the dark `:root` tokens without modifying the components.
-- Fonts: `--font-geist-sans` / `--font-geist-mono` (set on `<html>` by `next/font`) mapped to Tailwind `font-sans` / `font-mono` via `@theme inline`.
-- 04-editor-dialogs (mock data only, no API/persistence):
-  - `app/editor/page.tsx`: server component, `auth()` guard redirects to `/sign-in` if unauthenticated, renders `<EditorHome />`.
-  - `components/editor/editor-home.tsx`: client component owning `isSidebarOpen` state and the `useProjectsDialogs` hook. Composes `EditorNavbar` (top), floating `ProjectSidebar`, and a minimal centered home message (`Create a project or open an existing one` + description + `New Project` button with `Plus`). No card wrappers. Renders all three dialogs and wires open/close/submit.
-  - `hooks/use-projects-dialogs.ts`: dedicated hook managing dialog state (`create`/`rename`/`delete`/null), `activeProject`, `isSubmitting` loading state, and `name`/`slug` form state. `setName` derives `slug` live via `slugify`. Submit handlers simulate latency with `setTimeout` (600ms) then close — placeholder for future API wiring.
-  - `lib/slugify.ts`: lowercase, strip non-alphanumeric, collapse whitespace/dashes to single hyphens, trim edges.
-  - `lib/mock-projects.ts`: 4 `Project` records (2 owned, 2 shared) — source for the sidebar lists until Prisma lands.
-  - `types/project.ts`: `Project` interface (`id`, `name`, `slug`, `owner`, `updatedAt`), `ProjectDialogState`.
-  - `components/editor/project-item.tsx`: sidebar project row with name, slug, relative timestamp, and hover-reveal `Pencil`/`Trash2` action buttons. Actions render only when `project.owner && onRename && onDelete` — shared/collaborator projects show no actions.
-  - `components/editor/project-sidebar.tsx` (updated): now accepts `projects`, `onNewProject`, `onRename`, `onDelete`; splits owned/shared; renders scrollable `ProjectItem` lists under the existing "My Projects"/"Shared" tabs. Mobile (`md:hidden`) backdrop scrim with tap-to-close; desktop relies on the navbar toggle.
-  - `components/editor/dialogs/create-project-dialog.tsx`: name input (auto-focused) + live slug preview box; `Enter` submits form; footer Cancel/Create buttons; Create disabled until name+slug non-empty.
-  - `components/editor/dialogs/rename-project-dialog.tsx`: prefilled name input (auto-focused), description shows current project name, `Enter` submits; Save disabled when name empty or unchanged.
-  - `components/editor/dialogs/delete-project-dialog.tsx`: destructive confirmation only (no input), confirm button uses `variant="destructive"`.
-  - Verified with `pnpm lint` and `pnpm build` (no TS/lint errors). `/editor` builds as a dynamic (`ƒ`) server-rendered route.
-- 05-prisma:
-  - `prisma/models/project.prisma` defines `Project` (`id`, `ownerId`→`owner_id`, `name`, `description?`, `status` enum default `DRAFT`, `canvasJsonPath?`→`canvas_json_path`, `createdAt`, `updatedAt`) and `ProjectCollaborator` (`id`, `projectId`→`project_id`, `collaboratorEmail`→`collaborator_email`, `createdAt`, FK to `Project` with `onDelete: Cascade`). Indexes: `Project(ownerId)`, `Project(createdAt)`, `ProjectCollaborator(collaboratorEmail)`, `ProjectCollaborator(projectId, createdAt)`, unique `(projectId, collaboratorEmail)`.
-  - `enum ProjectStatus { DRAFT, ARCHIVED }`.
-  - `lib/prisma.ts`: cached singleton on `globalThis` (non-production only). Branches on `DATABASE_URL` — `prisma+postgres://` → `new PrismaClient({ accelerateUrl }).$extends(withAccelerate())`; otherwise `new PrismaClient({ adapter: new PrismaPg({ connectionString }) })`. Accelerate path type-cast `as unknown as PrismaClient` to keep the exported type uniform.
-  - `@prisma/extension-accelerate@3.0.1` installed beyond the spec's listed deps (required by the Accelerate branch).
-  - Prisma v7 `prisma-client` generator `output = "./app/generated/prisma"` is resolved **relative to the schema directory** (`prisma/`), so the generated client lives at `prisma/app/generated/prisma/client.ts`. The import in `lib/prisma.ts` is `@/prisma/app/generated/prisma/client` (NOT `@/app/generated/prisma/client`). `.gitignore` already excludes `/prisma/app/generated/prisma`.
-  - `prisma/schema.prisma` uses `previewFeatures = ["prismaSchemaFolder"]` to enable multi-file schema in `prisma/models/`. The feature is deprecated-but-functional in v7.9.0; safe to leave as-is.
-  - First migration `20260727171017_init` applied to the Postgres datasource in `.env.local` (`pooled.db.prisma.io:5432`). SQL: `prisma/migrations/20260727171017_init/migration.sql`.
-- 10-liveblocks-setup:
-  - Installed `@liveblocks/node@3.23.1` — the spec said "all required packages are already installed" but the server SDK was missing (only client/react/react-flow/react-ui were present). The `Liveblocks` class lives here.
-  - `liveblocks.config.ts`: replaced starter template. `Presence` = `{ cursor: { x, y } | null, isThinking: boolean }`. `UserMeta` = `{ id, info: { name, avatar, color } }`. `Storage` / `RoomEvent` / `ThreadMetadata` / `RoomInfo` left as empty placeholders for future specs.
-  - `lib/liveblocks.ts`: lazy-initialized `Liveblocks` singleton via `Proxy` so `next build` succeeds even without `LIVEBLOCKS_SECRET_KEY` (the SDK validates the secret shape on construction; an eager singleton blew up page-data collection). The real client materializes on first call from the auth route. `getUserColor(userId)` is a 12-color fixed-palette hash (visible on dark theme); deterministic so the same userId always maps to the same color.
-  - `app/api/liveblocks-auth/route.ts`: POST handler. `auth()` → 401; missing `room` in body → 400; `checkProjectAccess` → 403 (forbidden) / 404 (not-found); Clerk enrichment (firstName+lastName ?? firstName ?? username ?? email, imageUrl); `getOrCreateRoom(room, { defaultAccesses: ["room:write"] })` with errors logged but non-fatal; `identifyUser({ userId, groupIds: [] }, { userInfo: { name, avatar, color } })` returns the token via `new Response(body, { status })`.
-  - `Identity` type requires `groupIds` even when empty — passed `[]` to satisfy it without semantics.
-  - `.env.local` does not yet contain `LIVEBLOCKS_SECRET_KEY`; runtime requests will throw a clear error until the developer adds it from https://liveblocks.io/dashboard/apikeys.
+(Truncated for brevity)

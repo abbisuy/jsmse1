@@ -8,9 +8,10 @@ declare global {
       isThinking: boolean;
     };
 
-    // The Storage tree for the room, for useMutation, useStorage, etc.
+    // The Storage tree for the room, for useMutation, use
     Storage: {
-      // Populated by future canvas/editor specs.
+      // Liveblocks React Flow stores the flow diagram under the "flow" key.
+      // Managed by @liveblocks/react-flow useLiveblocksFlow; do not write here directly.
     };
 
     // Custom user info set when authenticating with a secret key
