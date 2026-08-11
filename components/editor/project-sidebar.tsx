@@ -52,7 +52,7 @@ export function ProjectSidebar({
       <aside
         className={`flex flex-col rounded-xl border border-surface-border bg-surface shadow-sm transition-all duration-200
           fixed top-0 left-0 z-40 h-full
-          md:static md:z-auto md:h-auto
+          md:static md:z-auto h-full
           ${isOpen ? "w-72" : "hidden md:w-0 md:overflow-hidden"}
           ${className}
         `}

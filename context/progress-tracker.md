@@ -10,7 +10,7 @@ So I will update it to: "Prisma integration for projects (replace mock-projects 
 
 ## In Progress
 
-(Empty - all previous tasks are done)
+- 12-shape-panel.md — Bottom floating pill toolbar with draggable shape buttons (rect/diamond/circle/pill/cylinder/hexagon) that add nodes to the canvas on drop. Basic bordered-rectangle node renderer for all shapes; shape-specific visuals deferred.
 
 
 ## Completed
@@ -27,9 +27,6 @@ So I will update it to: "Prisma integration for projects (replace mock-projects 
 - 09-share-dialog.md — Share dialog with invite/collaborator list/link copy; Clerk enrichment; owner enforcement server-side
 - 10-liveblocks-setup.md — Liveblocks realtime foundation: `liveblocks.config.ts` Presence/UserMeta types, cached `Liveblocks` server client + `getUserColor` palette helper in `lib/liveblocks.ts`, Clerk-gated `POST /api/liveblocks-auth` that uses `checkProjectAccess` for 403, calls `getOrCreateRoom(projectId)` with `defaultAccesses: ["room:write"]`, and issues ID tokens via `identifyUser` with name/avatar/color userInfo.
 - 11-base-canvas.md — Implementation of collaborative canvas using React Flow and Liveblocks, featuring synchronized nodes/edges, shared cursors, and robust error/loading boundaries.
-
-## Next Up
-
 
 ## Open Questions
 

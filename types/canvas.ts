@@ -1,6 +1,12 @@
 import type { Edge, Node } from "@xyflow/react";
 
-export type CanvasNodeShape = "rect" | "circle" | "diamond";
+export type CanvasNodeShape =
+  | "rect"
+  | "circle"
+  | "diamond"
+  | "pill"
+  | "cylinder"
+  | "hexagon";
 
 export interface CanvasNodeData {
   label: string;
@@ -23,3 +29,26 @@ export interface CanvasEdge extends Edge {
   type?: "canvasEdge";
   data?: CanvasEdgeData;
 }
+
+export const DEFAULT_NODE_COLOR = "#8b97af";
+export const DEFAULT_NODE_TEXT_COLOR = "#e5e7eb";
+
+export const SHAPE_DEFAULT_SIZE: Record<
+  CanvasNodeShape,
+  { width: number; height: number }
+> = {
+  rect: { width: 160, height: 80 },
+  circle: { width: 80, height: 80 },
+  diamond: { width: 200, height: 120 },
+  pill: { width: 120, height: 60 },
+  cylinder: { width: 120, height: 100 },
+  hexagon: { width: 140, height: 80 },
+};
+
+export interface ShapeDragPayload {
+  shape: CanvasNodeShape;
+  width: number;
+  height: number;
+}
+
+export const CANVAS_SHAPE_MIME = "application/x-canvas-shape";
