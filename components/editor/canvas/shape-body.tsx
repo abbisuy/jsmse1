@@ -14,6 +14,7 @@ interface ShapeBodyProps {
   label: string;
   selected?: boolean;
   variant?: ShapeBodyVariant;
+  placeholder?: string;
 }
 
 const CSS_SHAPES: CanvasNodeShape[] = ["rect", "pill", "circle"];
@@ -49,15 +50,26 @@ export function ShapeBody({
   label,
   selected = false,
   variant = "node",
+  placeholder,
 }: ShapeBodyProps) {
   const strokeColor = selected
     ? "var(--color-ring)"
     : "var(--color-surface-border)";
   const strokeWidth = selected ? 2 : 1.5;
   const showLabel = variant === "node" && label.length > 0;
+  const showPlaceholder =
+    variant === "node" && !showLabel && Boolean(placeholder);
   const containerOpacity = variant === "drag-preview" ? 0.65 : 1;
   const useCss = isCssShape(shape);
   const useSvg = isSvgShape(shape);
+
+  const placeholderSpan = showPlaceholder ? (
+    <span
+      className="pointer-events-none truncate text-center text-sm italic text-copy-secondary/50"
+    >
+      {placeholder}
+    </span>
+  ) : null;
 
   return (
     <div
@@ -83,7 +95,9 @@ export function ShapeBody({
             >
               {label}
             </span>
-          ) : null}
+          ) : (
+            placeholderSpan
+          )}
         </div>
       ) : useSvg && (() => {
         const narrowed = shape as Extract<CanvasNodeShape, "diamond" | "hexagon" | "cylinder">;
@@ -99,14 +113,18 @@ export function ShapeBody({
         );
       })()}
 
-      {showLabel && useSvg ? (
+      {useSvg && (showLabel || showPlaceholder) ? (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-3 py-2">
-          <span
-            className="truncate text-center text-sm"
-            style={{ color: textColor }}
-          >
-            {label}
-          </span>
+          {showLabel ? (
+            <span
+              className="truncate text-center text-sm"
+              style={{ color: textColor }}
+            >
+              {label}
+            </span>
+          ) : (
+            placeholderSpan
+          )}
         </div>
       ) : null}
     </div>

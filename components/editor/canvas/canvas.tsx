@@ -17,6 +17,7 @@ import "@liveblocks/react-ui/styles.css";
 import "@liveblocks/react-flow/styles.css";
 
 import { CanvasNodeRenderer } from "@/components/editor/canvas/canvas-node";
+import { CanvasEditProvider } from "@/components/editor/canvas/canvas-edit-context";
 import { ShapePanel } from "@/components/editor/canvas/shape-panel";
 import {
   CANVAS_SHAPE_MIME,
@@ -116,24 +117,26 @@ function CanvasInner({
   );
 
   return (
-    <div
-      className="relative h-full w-full bg-surface"
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      <ReactFlow
-        nodes={flow.nodes}
-        edges={flow.edges}
-        nodeTypes={{ canvasNode: CanvasNodeRenderer }}
-        onNodesChange={flow.onNodesChange}
-        onEdgesChange={flow.onEdgesChange}
-        onConnect={flow.onConnect}
-        onDelete={flow.onDelete}
+    <CanvasEditProvider dispatch={flow.onNodesChange}>
+      <div
+        className="relative h-full w-full bg-surface"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
-        <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
-        <Cursors />
-      </ReactFlow>
-      <ShapePanel />
-    </div>
+        <ReactFlow
+          nodes={flow.nodes}
+          edges={flow.edges}
+          nodeTypes={{ canvasNode: CanvasNodeRenderer }}
+          onNodesChange={flow.onNodesChange}
+          onEdgesChange={flow.onEdgesChange}
+          onConnect={flow.onConnect}
+          onDelete={flow.onDelete}
+        >
+          <Background variant={BackgroundVariant.Dots} gap={20} size={1} />
+          <Cursors />
+        </ReactFlow>
+        <ShapePanel />
+      </div>
+    </CanvasEditProvider>
   );
 }

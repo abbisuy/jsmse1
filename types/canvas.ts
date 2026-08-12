@@ -45,6 +45,24 @@ export const SHAPE_DEFAULT_SIZE: Record<
   hexagon: { width: 140, height: 80 },
 };
 
+export const SHAPE_MIN_SIZE: Record<
+  CanvasNodeShape,
+  { width: number; height: number }
+> = {
+  rect: { width: 80, height: 40 },
+  circle: { width: 48, height: 48 },
+  diamond: { width: 100, height: 60 },
+  pill: { width: 72, height: 36 },
+  cylinder: { width: 72, height: 60 },
+  hexagon: { width: 80, height: 48 },
+};
+
+export function getShapeMinSize(shape: CanvasNodeShape) {
+  return SHAPE_MIN_SIZE[shape];
+}
+
+export const SHAPE_LABEL_PLACEHOLDER = "Double-click to edit";
+
 export interface ShapeDragPayload {
   shape: CanvasNodeShape;
   width: number;

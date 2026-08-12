@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-13-node-shape.md
+14-node-editing.md
 
 ## In Progress
 
-- 13-node-shape.md — replacing placeholder node renderer with per-shape rendering (CSS + SVG) and adding a shape drag preview from the shape panel.
+- 14-node-editing.md — adding resize handles (per-shape minimum) and inline double-click label editing (textarea overlay, commit on blur/Escape/Enter) to canvas nodes, routed through the existing `flow.onNodesChange` channel.
 
 ## Completed
 
@@ -25,6 +25,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - 10-liveblocks-setup.md — Liveblocks realtime foundation: `liveblocks.config.ts` Presence/UserMeta types, cached `Liveblocks` server client + `getUserColor` palette helper in `lib/liveblocks.ts`, Clerk-gated `POST /api/liveblocks-auth` that uses `checkProjectAccess` for 403, calls `getOrCreateRoom(projectId)` with `defaultAccesses: ["room:write"]`, and issues ID tokens via `identifyUser` with name/avatar/color userInfo.
 - 11-base-canvas.md — Implementation of collaborative canvas using React Flow and Liveblocks, featuring synchronized nodes/edges, shared cursors, and robust error/loading boundaries.
 - 12-shape-panel.md
+- 13-node-shape.md — replaced placeholder node renderer with per-shape CSS + SVG shape bodies (rect/pill/circle via CSS, diamond/hexagon/cylinder via SVG), selected-state brighter stroke, and ghost drag preview attached to cursor from the shape panel.
 
 ## Open Questions
 
