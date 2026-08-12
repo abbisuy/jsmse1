@@ -4,14 +4,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-14-node-editing.md
+14A-node-label-autosize.md
 
 ## In Progress
 
-- 14-node-editing.md — adding resize handles (per-shape minimum) and inline double-click label editing (textarea overlay, commit on blur/Escape/Enter) to canvas nodes, routed through the existing `flow.onNodesChange` channel.
+- None currently.
 
 ## Completed
 
+- 14A-node-label-autosize.md — `ShapeBody` now computes the biggest axis-aligned rectangle inscribed in each shape (rect inset; pill straight side band; circle inscribed square; diamond centered half; hexagon flat middle band; cylinder rect body minus ellipse caps), pads it 3px, wraps label text inside it (CSS `-webkit-line-clamp` set to `floor(innerH / 18px)`), and truncates overflow with "…" via `overflow: hidden` + `text-overflow: ellipsis`. Resize reflows automatically because `width`/`height` are props. Build passes.
 - Next.js boilerplate cleanup (globals.css stripped, public SVGs removed, minimal page).
 - 01A-design-system: shadcn/api setup + dark theme tokens + UI primitive components.
 - 02-editor: editor navbar + floating project sidebar shell + dialog pattern readiness.
@@ -26,6 +27,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - 11-base-canvas.md — Implementation of collaborative canvas using React Flow and Liveblocks, featuring synchronized nodes/edges, shared cursors, and robust error/loading boundaries.
 - 12-shape-panel.md
 - 13-node-shape.md — replaced placeholder node renderer with per-shape CSS + SVG shape bodies (rect/pill/circle via CSS, diamond/hexagon/cylinder via SVG), selected-state brighter stroke, and ghost drag preview attached to cursor from the shape panel.
+- 14-node-editing.md
 
 ## Open Questions
 
