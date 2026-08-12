@@ -86,6 +86,14 @@ function getInscribedLabelArea(
       break;
     }
     case "circle": {
+      const innerWidth = width / Math.SQRT2;
+      const innerHeight = height / Math.SQRT2;
+      box = {
+        x: (width - innerWidth) / 2,
+        y: (height - innerHeight) / 2,
+        width: innerWidth,
+        height: innerHeight,
+      };
       // Biggest rectangle inscribed in a circle is a square with side = r*sqrt(2).
       const r = Math.min(width, height) / 2;
       const side = r * Math.SQRT2;
