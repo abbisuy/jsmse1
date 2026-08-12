@@ -33,6 +33,22 @@ export interface CanvasEdge extends Edge {
 export const DEFAULT_NODE_COLOR = "#8b97af";
 export const DEFAULT_NODE_TEXT_COLOR = "#e5e7eb";
 
+export interface NodeColorPair {
+  color: string;
+  textColor: string;
+}
+
+export const NODE_COLORS: NodeColorPair[] = [
+  { color: "#1F1F1F", textColor: "#EDEDED" },
+  { color: "#10233D", textColor: "#52A8FF" },
+  { color: "#2E1938", textColor: "#BF7AF0" },
+  { color: "#331B00", textColor: "#FF990A" },
+  { color: "#3C1618", textColor: "#FF6166" },
+  { color: "#3A1726", textColor: "#F75F8F" },
+  { color: "#0F2E18", textColor: "#62C073" },
+  { color: "#062822", textColor: "#0AC7B4" },
+];
+
 export const SHAPE_DEFAULT_SIZE: Record<
   CanvasNodeShape,
   { width: number; height: number }

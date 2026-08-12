@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-14A-node-label-autosize.md
+None currently.
 
 ## In Progress
 
@@ -12,6 +12,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Completed
 
+- 15-node-color-toolbar.md — Added `NODE_COLORS` 8-pair palette + `NodeColorPair` to `types/canvas.ts`; new `NodeColorToolbar` floating swatch row with active `ring-2 ring-ring`, tight `6px` hover glow using the swatch's own text color, and `stopPropagation` on pointer/mouse/touch/double-click so it doesn't drag nodes or pan the canvas; wired into `CanvasNodeRenderer` above selected non-editing nodes via a `replace` change into the existing Liveblocks storage; `ShapeBody` already reflects `data.color` / `data.textColor` so no further changes were needed. Build passes.
 - 14A-node-label-autosize.md — `ShapeBody` now computes the biggest axis-aligned rectangle inscribed in each shape (rect inset; pill straight side band; circle inscribed square; diamond centered half; hexagon flat middle band; cylinder rect body minus ellipse caps), pads it 3px, wraps label text inside it (CSS `-webkit-line-clamp` set to `floor(innerH / 18px)`), and truncates overflow with "…" via `overflow: hidden` + `text-overflow: ellipsis`. Resize reflows automatically because `width`/`height` are props. Build passes.
 - Next.js boilerplate cleanup (globals.css stripped, public SVGs removed, minimal page).
 - 01A-design-system: shadcn/api setup + dark theme tokens + UI primitive components.

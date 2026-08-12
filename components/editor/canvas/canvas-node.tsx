@@ -9,6 +9,7 @@ import {
 } from "@xyflow/react";
 
 import { useCanvasEditDispatch } from "@/components/editor/canvas/canvas-edit-context";
+import { NodeColorToolbar } from "@/components/editor/canvas/node-color-toolbar";
 import { ShapeBody } from "@/components/editor/canvas/shape-body";
 import { cn } from "@/lib/utils";
 import {
@@ -17,6 +18,7 @@ import {
   getShapeMinSize,
   type CanvasNode,
   type CanvasNodeShape,
+  type NodeColorPair,
 } from "@/types/canvas";
 
 const SVG_SHAPES: ReadonlySet<CanvasNodeShape> = new Set([
@@ -75,6 +77,27 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
     setEditing(true);
   }, [data.label]);
 
+  const handleColorChange = useCallback(
+    (pair: NodeColorPair) => {
+      if (pair.color === data.color && pair.textColor === data.textColor) {
+        return;
+      }
+      const current = getNode(id) as CanvasNode | undefined;
+      if (!current) return;
+      const item: CanvasNode = {
+        ...current,
+        data: {
+          ...current.data,
+          color: pair.color,
+          textColor: pair.textColor,
+        },
+      };
+      const change: NodeChange<CanvasNode> = { type: "replace", id, item };
+      dispatch([change]);
+    },
+    [data.color, data.textColor, dispatch, getNode, id],
+  );
+
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Escape") {
@@ -109,6 +132,19 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
       className="relative"
       style={{ width: resolvedWidth, height: resolvedHeight }}
     >
+      {selected && !editing ? (
+        <div
+          className="absolute left-1/2 -translate-x-1/2"
+          style={{ bottom: `calc(100% + 12px)` }}
+        >
+          <NodeColorToolbar
+            currentColor={data.color}
+            currentColorText={data.textColor}
+            onChange={handleColorChange}
+          />
+        </div>
+      ) : null}
+
       {selected ? (
         <NodeResizer
           nodeId={id}
