@@ -68,10 +68,21 @@ function getInscribedLabelArea(
       break;
     }
     case "pill": {
-      // Pill = rounded rect with radius = height/2. The biggest rectangle
-      // that fits inside is bounded by the straight side segments.
-      const r = height / 2;
-      box = { x: r, y: 0, width: width - 2 * r, height };
+      if (width === height) {
+        const side = width / Math.SQRT2;
+        box = {
+          x: (width - side) / 2,
+          y: (height - side) / 2,
+          width: side,
+          height: side,
+        };
+      } else if (width > height) {
+        const r = height / 2;
+        box = { x: r, y: 0, width: width - 2 * r, height };
+      } else {
+        const r = width / 2;
+        box = { x: 0, y: r, width, height: height - 2 * r };
+      }
       break;
     }
     case "circle": {
@@ -111,12 +122,11 @@ function getInscribedLabelArea(
       // flat rectangle as width = w - 2*inset, height = h/2, centered.
       const inset = Math.min(width, height) * 0.25;
       const innerW = Math.max(0, width - 2 * inset);
-      const innerH = height / 2;
       box = {
         x: (width - innerW) / 2,
-        y: (height - innerH) / 2,
+        y: 0,
         width: innerW,
-        height: innerH,
+        height,
       };
       break;
     }
