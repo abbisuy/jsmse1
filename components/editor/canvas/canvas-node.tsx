@@ -2,7 +2,9 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import {
+  Handle,
   NodeResizer,
+  Position,
   useReactFlow,
   type NodeChange,
   type NodeProps,
@@ -45,6 +47,7 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(data.label);
+  const [hovered, setHovered] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -131,7 +134,45 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
     <div
       className="relative"
       style={{ width: resolvedWidth, height: resolvedHeight }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
+      <Handle
+        type="source"
+        position={Position.Top}
+        className={cn(
+          "h-2 w-2 rounded-full bg-surface border border-surface-border",
+          "transition-opacity duration-150",
+          hovered ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className={cn(
+          "h-2 w-2 rounded-full bg-surface border border-surface-border",
+          "transition-opacity duration-150",
+          hovered ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className={cn(
+          "h-2 w-2 rounded-full bg-surface border border-surface-border",
+          "transition-opacity duration-150",
+          hovered ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        className={cn(
+          "h-2 w-2 rounded-full bg-surface border border-surface-border",
+          "transition-opacity duration-150",
+          hovered ? "opacity-100" : "opacity-0",
+        )}
+      />
       {selected && !editing ? (
         <div
           className="absolute left-1/2 -translate-x-1/2"

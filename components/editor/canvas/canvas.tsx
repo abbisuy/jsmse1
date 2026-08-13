@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import {
   Background,
   BackgroundVariant,
+  MarkerType,
   ReactFlow,
   ReactFlowProvider,
   useReactFlow,
@@ -17,6 +18,7 @@ import "@liveblocks/react-ui/styles.css";
 import "@liveblocks/react-flow/styles.css";
 
 import { CanvasNodeRenderer } from "@/components/editor/canvas/canvas-node";
+import { CanvasEdgeRenderer } from "@/components/editor/canvas/canvas-edge";
 import { CanvasEditProvider } from "@/components/editor/canvas/canvas-edit-context";
 import { ShapePanel } from "@/components/editor/canvas/shape-panel";
 import {
@@ -117,7 +119,10 @@ function CanvasInner({
   );
 
   return (
-    <CanvasEditProvider dispatch={flow.onNodesChange}>
+    <CanvasEditProvider
+      dispatchNodes={flow.onNodesChange}
+      dispatchEdges={flow.onEdgesChange}
+    >
       <div
         className="relative h-full w-full bg-surface"
         onDragOver={handleDragOver}
@@ -127,6 +132,12 @@ function CanvasInner({
           nodes={flow.nodes}
           edges={flow.edges}
           nodeTypes={{ canvasNode: CanvasNodeRenderer }}
+          edgeTypes={{ canvasEdge: CanvasEdgeRenderer }}
+          defaultEdgeOptions={{
+            type: "canvasEdge",
+            markerEnd: { type: MarkerType.ArrowClosed },
+            data: { label: "" },
+          }}
           onNodesChange={flow.onNodesChange}
           onEdgesChange={flow.onEdgesChange}
           onConnect={flow.onConnect}

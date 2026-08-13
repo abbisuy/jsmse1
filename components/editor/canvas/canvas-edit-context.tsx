@@ -1,34 +1,50 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import type { NodeChange } from "@xyflow/react";
+import type { EdgeChange, NodeChange } from "@xyflow/react";
 
-import type { CanvasNode } from "@/types/canvas";
+import type { CanvasEdge, CanvasNode } from "@/types/canvas";
 
-export type CanvasEditDispatch = (changes: NodeChange<CanvasNode>[]) => void;
+export type CanvasNodeEditDispatch = (changes: NodeChange<CanvasNode>[]) => void;
+export type CanvasEdgeEditDispatch = (changes: EdgeChange<CanvasEdge>[]) => void;
 
-const CanvasEditContext = createContext<CanvasEditDispatch | null>(null);
+type CanvasEditContextValue = {
+  dispatchNodes: CanvasNodeEditDispatch;
+  dispatchEdges: CanvasEdgeEditDispatch;
+};
+
+const CanvasEditContext = createContext<CanvasEditContextValue | null>(null);
 
 export function CanvasEditProvider({
-  dispatch,
+  dispatchNodes,
+  dispatchEdges,
   children,
 }: {
-  dispatch: CanvasEditDispatch;
+  dispatchNodes: CanvasNodeEditDispatch;
+  dispatchEdges: CanvasEdgeEditDispatch;
   children: ReactNode;
 }) {
   return (
-    <CanvasEditContext.Provider value={dispatch}>
+    <CanvasEditContext.Provider value={{ dispatchNodes, dispatchEdges }}>
       {children}
     </CanvasEditContext.Provider>
   );
 }
 
-export function useCanvasEditDispatch(): CanvasEditDispatch {
-  const dispatch = useContext(CanvasEditContext);
-  if (!dispatch) {
+function useCanvasEditContext(): CanvasEditContextValue {
+  const value = useContext(CanvasEditContext);
+  if (!value) {
     throw new Error(
       "useCanvasEditDispatch must be used inside <CanvasEditProvider>",
     );
   }
-  return dispatch;
+  return value;
+}
+
+export function useCanvasEditDispatch(): CanvasNodeEditDispatch {
+  return useCanvasEditContext().dispatchNodes;
+}
+
+export function useCanvasEdgeEditDispatch(): CanvasEdgeEditDispatch {
+  return useCanvasEditContext().dispatchEdges;
 }

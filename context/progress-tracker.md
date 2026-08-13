@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-None currently.
+16-edge-behavior.md
 
 ## In Progress
 
@@ -12,6 +12,7 @@ None currently.
 
 ## Completed
 
+- 16-edge-behavior.md — Replaced default React Flow bezier edges with a custom `canvasEdge` renderer in `components/editor/canvas/canvas-edge.tsx`: smoothstep right-angle routing (`getSmoothStepPath`, 16px radius), `BaseEdge` with dimmed stroke at rest + bright `--color-ring` on hover/selection, a 20px-wide invisible hit path for easy clicking without thicker visible line, `EdgeLabelRenderer` pill at path midpoint, double-click to edit with a `field-sizing-content` input (blur/Enter/Escape commit), and a faint placeholder hint pill when active and unlabeled. New edges seeded via `defaultEdgeOptions` (`type: "canvasEdge"`, closed arrow marker, `data.label = ""`) in `canvas.tsx`; `edgeTypes` registered alongside `nodeTypes`. Added four `<Handle>` (Top/Right/Bottom/Left, all `type="source"`) to `CanvasNodeRenderer` — small white dots with dark border, opacity-0 by default, fade in on node `hovered` state. Extended `canvas-edit-context.tsx` to carry both `dispatchNodes` and `dispatchEdges`; edge label commits flow as `replace` `EdgeChange`s through Liveblocks `flow.onEdgesChange`. Added explicit `label?: string` to `CanvasEdgeData` and `EDGE_LABEL_PLACEHOLDER` constant in `types/canvas.ts`. Edge label input/textarea-style `stopPropagation` on pointer/mouse/touch/double-click prevents canvas pan during typing. Build passes.
 - 15-node-color-toolbar.md — Added `NODE_COLORS` 8-pair palette + `NodeColorPair` to `types/canvas.ts`; new `NodeColorToolbar` floating swatch row with active `ring-2 ring-ring`, tight `6px` hover glow using the swatch's own text color, and `stopPropagation` on pointer/mouse/touch/double-click so it doesn't drag nodes or pan the canvas; wired into `CanvasNodeRenderer` above selected non-editing nodes via a `replace` change into the existing Liveblocks storage; `ShapeBody` already reflects `data.color` / `data.textColor` so no further changes were needed. Build passes.
 - 14A-node-label-autosize.md — `ShapeBody` now computes the biggest axis-aligned rectangle inscribed in each shape (rect inset; pill straight side band; circle inscribed square; diamond centered half; hexagon flat middle band; cylinder rect body minus ellipse caps), pads it 3px, wraps label text inside it (CSS `-webkit-line-clamp` set to `floor(innerH / 18px)`), and truncates overflow with "…" via `overflow: hidden` + `text-overflow: ellipsis`. Resize reflows automatically because `width`/`height` are props. Build passes.
 - Next.js boilerplate cleanup (globals.css stripped, public SVGs removed, minimal page).

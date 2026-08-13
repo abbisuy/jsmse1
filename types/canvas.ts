@@ -22,6 +22,7 @@ export interface CanvasNode extends Node {
 }
 
 export interface CanvasEdgeData {
+  label?: string;
   [key: string]: unknown;
 }
 
@@ -78,6 +79,8 @@ export function getShapeMinSize(shape: CanvasNodeShape) {
 }
 
 export const SHAPE_LABEL_PLACEHOLDER = "Double-click to edit";
+
+export const EDGE_LABEL_PLACEHOLDER = "Add label";
 
 export interface ShapeDragPayload {
   shape: CanvasNodeShape;
