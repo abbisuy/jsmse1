@@ -35,7 +35,7 @@ function useCanvasEditContext(): CanvasEditContextValue {
   const value = useContext(CanvasEditContext);
   if (!value) {
     throw new Error(
-      "useCanvasEditDispatch must be used inside <CanvasEditProvider>",
+      "Canvas edit hooks must be used inside <CanvasEditProvider>",
     );
   }
   return value;

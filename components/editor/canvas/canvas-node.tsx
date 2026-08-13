@@ -140,6 +140,7 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
       <Handle
         type="source"
         position={Position.Top}
+        id="top"
         className={cn(
           "h-2 w-2 rounded-full bg-surface border border-surface-border",
           "transition-opacity duration-150",
@@ -149,6 +150,7 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
       <Handle
         type="source"
         position={Position.Right}
+        id="right"
         className={cn(
           "h-2 w-2 rounded-full bg-surface border border-surface-border",
           "transition-opacity duration-150",
@@ -158,6 +160,7 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
       <Handle
         type="source"
         position={Position.Bottom}
+        id="bottom"
         className={cn(
           "h-2 w-2 rounded-full bg-surface border border-surface-border",
           "transition-opacity duration-150",
@@ -167,6 +170,7 @@ export const CanvasNodeRenderer = memo(function CanvasNodeRenderer({
       <Handle
         type="source"
         position={Position.Left}
+        id="left"
         className={cn(
           "h-2 w-2 rounded-full bg-surface border border-surface-border",
           "transition-opacity duration-150",
