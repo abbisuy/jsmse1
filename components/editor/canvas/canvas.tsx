@@ -21,6 +21,7 @@ import { CanvasNodeRenderer } from "@/components/editor/canvas/canvas-node";
 import { CanvasEdgeRenderer } from "@/components/editor/canvas/canvas-edge";
 import { CanvasEditProvider } from "@/components/editor/canvas/canvas-edit-context";
 import { ShapePanel } from "@/components/editor/canvas/shape-panel";
+import { CanvasControls } from "@/components/editor/canvas/canvas-controls";
 import {
   CANVAS_SHAPE_MIME,
   DEFAULT_NODE_COLOR,
@@ -147,6 +148,7 @@ function CanvasInner({
           <Cursors />
         </ReactFlow>
         <ShapePanel />
+        <CanvasControls />
       </div>
     </CanvasEditProvider>
   );
