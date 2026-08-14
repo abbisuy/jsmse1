@@ -4,11 +4,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-17-canvas-controls.md
+16A-edge-behavior-continued.md
 
 ## In Progress
 
 - None currently.
+
+## Completed
+
+- 16A-edge-behavior-continued.md — Fixed a connection bug from 16-edge-behavior: dragging from one node handle toward another showed a connection line but the edge was never committed on release (the line just disappeared). Root cause: all four `<Handle>`s on `CanvasNodeRenderer` are `type="source"`, and React Flow's default `ConnectionMode.Strict` only allows source→target pairs, so source→source drops were silently rejected. Added `connectionMode={ConnectionMode.Loose}` to `<ReactFlow>` in `components/editor/canvas/canvas.tsx` (and imported `ConnectionMode` from `@xyflow/react`) so any-handle-to-any-handle connects — matching the spec requirement "users should be able to connect from any handle to any other handle." No other files changed. `npm run build` passes without type errors.
 
 ## Completed
 

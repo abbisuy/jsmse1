@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import {
   Background,
   BackgroundVariant,
+  ConnectionMode,
   MarkerType,
   ReactFlow,
   ReactFlowProvider,
@@ -132,6 +133,7 @@ function CanvasInner({
         <ReactFlow
           nodes={flow.nodes}
           edges={flow.edges}
+          connectionMode={ConnectionMode.Loose}
           nodeTypes={{ canvasNode: CanvasNodeRenderer }}
           edgeTypes={{ canvasEdge: CanvasEdgeRenderer }}
           defaultEdgeOptions={{
