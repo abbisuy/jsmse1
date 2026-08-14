@@ -41,7 +41,7 @@ export function EditorWorkspace({
         onShareClick={() => setShowShareDialog(true)}
       />
 
-      <div className="flex flex-1 gap-1 overflow-hidden bg-base/80 p-1">
+      <div className="flex flex-1 gap-1 bg-base/80 p-1 md:overflow-hidden">
         <ProjectSidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
@@ -59,7 +59,7 @@ export function EditorWorkspace({
           className="shrink-0"
         />
 
-        <main className="flex flex-1 items-center justify-center rounded-xl border border-surface-border bg-surface shadow-sm px-6 text-center">
+        <main className="flex flex-1 items-center justify-center rounded-xl border border-surface-border bg-surface shadow-sm px-3 py-4 text-center md:px-6">
           <CanvasRoom roomId={currentProject.id} />
         </main>
 
