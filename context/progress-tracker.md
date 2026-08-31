@@ -4,11 +4,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Goal
 
-16A-edge-behavior-continued.md
+18-AI-sidebar-shell.md
 
 ## In Progress
 
 - None currently.
+
+## Completed
+
+- 18-AI-sidebar-shell.md — Extracted the placeholder AI `<aside>` from `editor-workspace.tsx` (was lines 66–79) into a new `AiSidebar` component at `components/editor/ai-sidebar.tsx`. Built as a floating right slide-over matching `ProjectSidebar`'s pattern: mobile backdrop (`md:hidden fixed inset-0 z-40 bg-black/50`) + slide via `translate-x-full` → `translate-x-0` on mobile, width-transition (`md:w-0` ↔ `md:w-80`) on `md+`. Header has `Bot` icon + "AI Workspace" title (`text-copy-primary`) + "Collaborate with Ghost AI" subtitle (`text-copy-muted`) + ghost `X` close button. shadcn `Tabs` with `AI Architect` / `Specs` triggers; active style overridden via `data-active:bg-subtle data-active:text-ai-text` (each trigger also shows an inline icon). AI Architect tab: `ScrollArea` empty state with `Bot` icon, two-line description, three starter prompt chips (`Design an e-commerce backend` / `Create a chat app architecture` / `Build a CI/CD pipeline`) styled as `rounded-full border border-surface-border bg-subtle text-ai-text` pills (clicking a chip fills the input); shadcn `Textarea` with `min-h-[72px] max-h-[160px] resize-none` and inherent `field-sizing-content` for auto-grow, `Enter` clears input / `Shift+Enter` inserts newline; `Send` button uses the spec's `bg-accent text-white hover:bg-accent/80` and is `disabled` (no backend wired). Specs tab: `Generate Spec` button (`bg-accent text-white`, disabled) + a single demo spec card (`bg-elevated border border-surface-border`) with `FileText` icon tile, title `canvas-v2.spec.md`, 2-line snippet, meta row, and a disabled download action. `editor-workspace.tsx` now mounts `<AiSidebar isOpen={isAiSidebarOpen} onClose={() => setIsAiSidebarOpen(false)} />` inside the existing flex row; parent still owns the open/close state. Spec color tokens mapped to existing ones: `text-primary-text` → `text-copy-primary`, `text-muted-text` → `text-copy-muted`, `text-accent-text`/`text-accent` → `text-ai-text`, active tab bg → `bg-subtle`. No backend / Liveblocks / AI generation logic. `npm run build` passes.
 
 ## Completed
 

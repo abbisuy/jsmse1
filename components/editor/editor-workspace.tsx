@@ -9,6 +9,7 @@ import { RenameProjectDialog } from "@/components/editor/dialogs/rename-project-
 import { DeleteProjectDialog } from "@/components/editor/dialogs/delete-project-dialog";
 import { ShareDialog } from "@/components/editor/dialogs/share-dialog";
 import { CanvasRoom } from "@/components/editor/canvas/canvas-room";
+import { AiSidebar } from "@/components/editor/ai-sidebar";
 import { useProjectsDialogs } from "@/hooks/use-projects-dialogs";
 import type { Project } from "@/types/project";
 
@@ -63,20 +64,10 @@ export function EditorWorkspace({
           <CanvasRoom roomId={currentProject.id} />
         </main>
 
-        <aside className={`hidden shrink-0 flex-col rounded-xl border border-surface-border bg-surface shadow-sm transition-all duration-200 md:flex ${
-            isAiSidebarOpen ? "w-80 overflow-hidden" : "w-0 overflow-hidden"
-          }`}
-          aria-hidden={!isAiSidebarOpen}
-        >
-          <div className="flex h-14 shrink-0 items-center border-b border-surface-border px-4">
-            <span className="text-sm font-medium text-copy-primary">
-              AI Assistant
-            </span>
-          </div>
-          <div className="flex flex-1 items-center justify-center px-6 text-center">
-            <p className="text-sm text-copy-secondary">AI chat coming soon</p>
-          </div>
-        </aside>
+        <AiSidebar
+          isOpen={isAiSidebarOpen}
+          onClose={() => setIsAiSidebarOpen(false)}
+        />
       </div>
 
       <CreateProjectDialog
